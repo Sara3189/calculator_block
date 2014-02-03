@@ -1,0 +1,129 @@
+<?php
+/**
+ * @file
+ * Module file for calculator.
+ */
+
+/**
+ * This module is for calculate the a final value using a multiplication
+ * factor. This multiplication factor will be configured through a configuration
+ * page.
+ */
+
+/**
+ * Implements hook_menu().
+ *
+ * Provides a default page to explain what this module does.
+ */
+function calculator_menu() {
+	$items['calculator/info'] = array(
+		'page callback' => 'calculator_info',
+		'access callback' => TRUE,
+    	'title' => 'Calculator info',
+	);
+	return $items;
+}
+
+/*
+ * Shows the information of the module
+ */
+function calculator_info() {
+	$page = array(
+    	'#type' => 'markup',
+    	'#markup' => t('This module is used for calculate insurances values.
+    	You can configure the block in <a href="@url">the block admin page</a>.', array('@url' => url('admin/structure/block'))),
+  );
+  return $page;
+}
+
+/**
+ * Implements hook_block_info().
+ *
+ */
+ function calculator_block_info() {
+ 	/* Block definition */
+ 	$blocks['insurance_calculator'] = array(
+ 		'info' => t('Insuance value for the anual rent'),
+ 		'cache' => DRUPAL_CACHE_GLOBAL,
+ 	);
+
+ 	return $blocks;
+ }
+
+ /**
+ * Implements hook_block_configure().
+ *
+ * This hook declares configuration options for blocks provided by this module.
+ */
+ function calculator_block_configure($delta = '') {
+ 	$form = array();
+ 	if ($delta == 'insurance_calculator') {
+ 		$form['calculator_factor'] = array(
+ 			'#type' => 'textfield',
+ 			'#title' => t('Multiplication factor:'),
+ 			'#size' => 8,
+ 			'#description' => t('Multiplication factor value for the module'),
+ 			'#default_value' => variable_get('calculator_factor', '0.0')
+ 		);
+ 	}
+
+ 	return $form;
+ }
+
+ /**
+ * Implements hook_block_save().
+ *
+ */
+ function calculator_block_save($delta = '', $edit = array()) {
+ 	if ($delta == 'insurance_calculator') {
+ 		// Save the configuration value
+ 		variable_set('calculator_factor', $edit['calculator_factor']);
+ 	}
+ }
+
+/**
+* Implements hook_block_view()
+*
+*/
+function calculator_block_view($delta = '') {
+	switch ($delta) {
+		case 'insurance_calculator':
+			$block['subject'] = t('Rent insurance');
+			$block['content'] = drupal_get_form('calculator_rent_form');
+			break;
+	}
+
+	return $block;
+}
+
+/**
+* Function with the form to calculate the insurance rent
+*/
+function calculator_rent_form($form, $form_state) {
+	$form = array();
+
+	$form['#attached']['js'] = array(
+		drupal_get_path('module', 'calculator') . '/js/calculator.js',
+	);
+
+	$form['amount'] = array(
+		'#type' => 'textfield',
+		'#size' => 20,
+		'#title' => t('Insert the amount')
+	);
+
+	$form['calc'] = array(
+		'#type' => 'button',
+		'#value' => t('Calculate'),
+	);
+
+	$form['total'] = array(
+		'#type' => 'textfield',
+		'#size' => 20,
+		'#attributes' => array('readonly' => 'readonly')
+	);
+
+	$form['#attributes']['onsubmit'] = 'calculation(' . variable_get('calculator_factor') .');';
+
+	return $form;
+}

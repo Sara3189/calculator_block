@@ -1,0 +1,13 @@
+<?php
+/**
+ * @file
+ * Install, update and uninstall functions for the calculator module.
+ */
+
+/**
+ * Implements hook_uninstall().
+ *
+ */
+function block_example_uninstall() {
+  variable_del('calculator_factor');
+}

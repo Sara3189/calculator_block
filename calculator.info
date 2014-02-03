@@ -1,0 +1,5 @@
+name = Calculator
+description = This module is make for calculation insurances costs
+package = Fincabroker
+core = 7.x
+dependencies[] = block
