@@ -119,6 +119,7 @@ function calculator_rent_form($form, $form_state) {
 
 	$form['total'] = array(
 		'#type' => 'textfield',
+		'#title' => t('Anual Total Amount'),
 		'#size' => 20,
 		'#attributes' => array('readonly' => 'readonly')
 	);
