@@ -1,6 +1,6 @@
 Calculator
 
-Copyright 2014 - Luis González Rodríguez - Connect2tic
+Copyright 2014 - Luis González Rodríguez
 
 This module is developed for Drupal 7.
 The module 'Calculator' makes the multiplication of an input value with a multiplication factor save in a variable in the system.
